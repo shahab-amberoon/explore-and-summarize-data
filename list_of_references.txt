@@ -1,0 +1,5 @@
+data source: https://s3.amazonaws.com/udacity-hosted-downloads/ud651/wineQualityWhites.csv
+http://projects.csail.mit.edu/wiki/pub/Evodesign/SensoryEvaluationsDatabase/winequality09.pdf
+https://s3.amazonaws.com/udacity-hosted-downloads/ud651/diamondsExample.html
+http://ggplot2.org/book/qplot.pdf
+http://www.statmethods.net/

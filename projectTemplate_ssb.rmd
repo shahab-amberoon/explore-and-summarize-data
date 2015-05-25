@@ -1,0 +1,289 @@
+White Wine Data Exploration by Shahab Sheikh-Bahaei
+========================================================
+# Introduction
+####In this project I explore a data set of white wines. The data set contains 4,898 white wines with 11 variables on quantifying the chemical properties of each wine. At least 3 wine experts rated the quality of each wine, providing a rating between 0 (very bad) and 10 (very excellent) [1]. 
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, packages}
+# Load all of the packages that you end up using
+# in your analysis in this code chunk.
+
+# Notice that the parameter "echo" was set to FALSE for this code chunk.
+# This prevents the code from displaying in the knitted HTML output.
+# You should set echo=FALSE for all code chunks in your file.
+
+library(ggplot2)
+library(car)
+```
+
+```{r echo=FALSE, warning=FALSE, Load_the_Data}
+# Load the Data
+setwd('/Users/shahab/Documents/ssb/course/udacity/R/project/')
+d=read.csv('wineQualityReds.csv')
+d=d[,2:13]
+summary(d)
+str(d)
+```
+
+# Univariate Plots Section
+```{r echo=FALSE, warning=FALSE, Univariate_Plots}
+library(reshape)
+dm<-melt(d)
+ggplot(dm,aes(x = value)) + 
+    facet_wrap(~variable,scales = "free_x") + 
+    geom_histogram()
+```
+
+```{r echo=FALSE, New_Variables}
+d$fraction.sulfur.dioxide=d$free.sulfur.dioxide/d$total.sulfur.dioxide
+d$AA_score=scale(d$alcohol)+scale(d$citric.acid)-scale(d$volatile.acidity)
+```
+
+```{r, warning=FALSE}
+qplot(d$fixed.acidity,data=d,geom="freqpoly", binwidth=0.5 )#,color=as.factor(quality))
+qplot(d$fixed.acidity,data=d,geom="freqpoly", binwidth=0.1)#,color=as.factor(quality))
+ggplot(aes(x=1,y=d$fixed.acidity),data=d)+geom_boxplot()
+summary(d$fixed.acidity)
+```
+
+```{r, warning=FALSE}
+qplot(d$volatile.acidity,data=d,geom="freqpoly")#,color=as.factor(quality))
+qplot(d$volatile.acidity,data=d,geom="freqpoly",binwidth=0.01)#,color=as.factor(quality))
+ggplot(aes(x=1,y=d$volatile.acidity),data=d)+geom_boxplot()
+summary(d$volatile.acidity)
+```
+
+```{r, warning=FALSE}
+qplot(d$citric.acid,data=d,geom="freqpoly")#,color=as.factor(quality))
+qplot(d$citric.acid,data=d,geom="freqpoly",binwidth=0.01)#,color=as.factor(quality))
+ggplot(aes(x=1,y=d$citric.acid),data=d)+geom_boxplot()
+summary(d$citric.acid)
+```
+
+```{r, warning=FALSE}
+qplot(d$residual.sugar,data=d,geom="freqpoly")#,color=as.factor(quality))
+qplot(d$residual.sugar,data=d,geom="freqpoly",binwidth=0.1)#,color=as.factor(quality))
+ggplot(aes(x=1,y=d$residual.sugar),data=d)+geom_boxplot()
+summary(d$residual.sugar)
+```
+
+```{r, warning=FALSE}
+qplot(d$chlorides,data=d,geom="freqpoly")#,color=as.factor(quality))
+qplot(d$chlorides,data=d,geom="freqpoly",binwidth=0.001)#,color=as.factor(quality))
+ggplot(aes(x=1,y=d$chlorides),data=d)+geom_boxplot()
+summary(d$chlorides)
+```
+
+```{r, warning=FALSE}
+qplot(d$free.sulfur.dioxide,data=d,geom="freqpoly")#,color=as.factor(quality))
+qplot(d$free.sulfur.dioxide,data=d,geom="freqpoly",binwidth=1)#,color=as.factor(quality))
+ggplot(aes(x=1,y=d$free.sulfur.dioxide),data=d)+geom_boxplot()
+summary(d$free.sulfur.dioxide)
+```
+
+```{r, warning=FALSE}
+qplot(d$total.sulfur.dioxide,data=d,geom="freqpoly")#,color=as.factor(quality))
+qplot(d$total.sulfur.dioxide,data=d,geom="freqpoly",binwidth=1)#,color=as.factor(quality))
+ggplot(aes(x=1,y=d$total.sulfur.dioxide),data=d)+geom_boxplot()
+summary(d$total.sulfur.dioxide)
+```
+
+```{r, warning=FALSE}
+qplot(d$density,data=d,geom="freqpoly")#,color=as.factor(quality))
+qplot(d$density,data=d,geom="freqpoly",binwidth=0.0001)#,color=as.factor(quality))
+ggplot(aes(x=1,y=d$density),data=d)+geom_boxplot()
+summary(d$density)
+```
+
+```{r, warning=FALSE}
+qplot(d$pH,data=d,geom="freqpoly")#,color=as.factor(quality))
+qplot(d$pH,data=d,geom="freqpoly",binwidth=0.01)#,color=as.factor(quality))
+ggplot(aes(x=1,y=d$pH),data=d)+geom_boxplot()
+summary(d$pH)
+```
+
+```{r, warning=FALSE}
+qplot(d$sulphates,data=d,geom="freqpoly")#,color=as.factor(quality))
+qplot(d$sulphates,data=d,geom="freqpoly",binwidth=0.01)#,color=as.factor(quality))
+ggplot(aes(x=1,y=d$sulphates),data=d)+geom_boxplot()
+summary(d$sulphates)
+```
+
+```{r, warning=FALSE}
+qplot(d$alcohol,data=d,geom="freqpoly")#,color=as.factor(quality))
+qplot(d$alcohol,data=d,geom="freqpoly",binwidth=0.1)#,color=as.factor(quality))
+ggplot(aes(x=1,y=d$alcohol),data=d)+geom_boxplot()
+summary(d$alcohol)
+```
+
+```{r, warning=FALSE}
+qplot(d$AA_score,data=d,geom="freqpoly")#,color=as.factor(quality))
+qplot(d$AA_score,data=d,geom="freqpoly",binwidth=0.1)#,color=as.factor(quality))
+ggplot(aes(x=1,y=d$AA_score),data=d)+geom_boxplot()
+summary(d$AA_score)
+```
+
+```{r, warning=FALSE}
+qplot(d$fraction.sulfur.dioxide,data=d,geom="freqpoly")#,color=as.factor(quality))
+qplot(d$fraction.sulfur.dioxide,data=d,geom="freqpoly",binwidth=0.01)#,color=as.factor(quality))
+ggplot(aes(x=1,y=d$fraction.sulfur.dioxide,),data=d)+geom_boxplot()
+summary(d$fraction.sulfur.dioxide)
+```
+# Univariate Analysis
+
+### What is the structure of your dataset?
+#### Number of Instances: 4898. 
+#### Number of Attributes: 11 
+#### Attributes are the following physicochemical properties:
+####   1 - fixed acidity (tartaric acid - g / dm^3)
+####   2 - volatile acidity (acetic acid - g / dm^3)
+####   3 - citric acid (g / dm^3)
+####   4 - residual sugar (g / dm^3)
+####   5 - chlorides (sodium chloride - g / dm^3
+####   6 - free sulfur dioxide (mg / dm^3)
+####   7 - total sulfur dioxide (mg / dm^3)
+####   8 - density (g / cm^3)
+####   9 - pH
+####   10 - sulphates (potassium sulphate - g / dm3)
+####   11 - alcohol (% by volume)
+#### Output variable (based on sensory data): 
+####   12 - quality (score between 0 and 10)
+
+### What is/are the main feature(s) of interest in your dataset?
+#### The univariate plots does not distinguish any features as beging particularly interesting. However, intuitively I expect that alcohol percentage should play a significant role in quality ratings.
+
+### What other features in the dataset do you think will help support your investigation into your feature(s) of interest?
+#### Based on description of attributes provided in [1], 'volatile acidity' and 'citric acid' might also play important role becaulse too much volatile acidity leads to an unpleasant flavor, and citric acid can add freshness and flavor to wines.
+
+### Did you create any new variables from existing variables in the dataset?
+#### Yes, I created two new features as follows:
+#### 1. fraction.sulfur.dioxide = free.sulfur.dioxide/total.sulfur.dioxide
+#### 2. AA_score = z(alcohol) + z(citric.acid) - z(volatile.acidity)
+#### AA_score stands for Alcohol and Acidity score. It's an intuitive way to combine alcohol, citric acid, volatile acidity of wines. z(x) denotes z-score of x; volatile.acidity was subtracted because it contributes to unpleasant flavor.
+
+
+### Of the features you investigated, were there any unusual distributions? Did you perform any operations on the data to tidy, adjust, or change the form of the data? If so, why did you do this?
+#### Most distributions looked bell shaped with a longer right tail. The most unusual distribution belonged to citric.acid. total.sulfure.dioxide and alcohol had longer tails than others. The data was already tidy. No adjustments were needed.
+
+
+# Bivariate Plots Section
+```{r echo=FALSE, warning=FALSE, Bivariate_Plots}
+#library(car)
+#scatterplot.matrix(~d$alcohol+free.sulfur.dioxide+citric.acid+pH, data=d,main="main")
+library(psych)
+psych::pairs.panels(d)
+cor(d)
+cor(d,d$quality)
+
+ggplot(d, aes(alcohol, quality)) + geom_point(alpha=0.01) + geom_smooth()+geom_jitter(alpha=0.2,position = position_jitter(height = 1))
+ggplot(d, aes(sulphates, quality)) + geom_point(alpha=0.01) + geom_smooth()+geom_jitter(alpha=0.2,position = position_jitter(height = 1))
+ggplot(d, aes(citric.acid, quality)) + geom_point(alpha=0.01) + geom_smooth()+geom_jitter(alpha=0.2,position = position_jitter(height = 1))
+ggplot(d, aes(fixed.acidity, quality)) + geom_point(alpha=0.01) + geom_smooth()+geom_jitter(alpha=0.2,position = position_jitter(height = 1))
+ggplot(d, aes(residual.sugar, quality)) + geom_point(alpha=0.01) + geom_smooth()+geom_jitter(alpha=0.2,position = position_jitter(height = 1))
+ggplot(d, aes(free.sulfur.dioxide , quality)) + geom_point(alpha=0.01) + geom_smooth()+geom_jitter(alpha=0.2,position = position_jitter(height = 1))
+ggplot(d, aes(pH, quality)) + geom_point(alpha=0.01) + geom_smooth()+geom_jitter(alpha=0.2,position = position_jitter(height = 1))
+ggplot(d, aes(volatile.acidity, quality)) + geom_point(alpha=0.01) + geom_smooth()+geom_jitter(alpha=0.2,position = position_jitter(height = 1))
+ggplot(d, aes(density, quality)) + geom_point(alpha=0.01) + geom_smooth()+geom_jitter(alpha=0.2,position = position_jitter(height = 1))
+
+ggplot(d, aes(fraction.sulfur.dioxide, quality)) + geom_point(alpha=0.01) + geom_smooth()+geom_jitter(alpha=0.2,position = position_jitter(height = 1))
+ggplot(d, aes(AA_score, quality)) + geom_point(alpha=0.01) + geom_smooth()+geom_jitter(alpha=0.2,position = position_jitter(height = 1))
+```
+
+# Bivariate Analysis
+
+### Talk about some of the relationships you observed in this part of the investigation. How did the feature(s) of interest vary with other features in the dataset?
+#### 'quality' had the highest correlation with alcohol, volatile.acidity and citric.acid, respectively. 'alcohol' did not have significant correlation with any other feature in the data set. 'volatile.acidity' and 'citric.acid' had a relatively high negative correlation coefficient (R=-0.55).
+#### 'quality' and sulphates appear to have an interesting relationship. Quality increases as sulphates increases up to 0.9 and then it decreases. There are 8 outlier wines with sulphates higher than 1.5 with moderate quality ranging between 4 to 8. 
+
+### Did you observe any interesting relationships between the other features (not the main feature(s) of interest)?
+#### fixed.acidity had high correlations with citric.acid (R=0.67), density (R=0.66), and pH (R=-0.68). 
+
+### What was the strongest relationship you found?
+#### The strongest relationship was between fixed.acidity and pH (R=-0.68) which is no surprise.
+
+# Multivariate Plots Section
+
+```{r echo=FALSE, warning=FALSE, Multivariate_Plots}
+qplot(d$fixed.acidity,data=d,geom="density",color=as.factor(quality), alpha=0.2)
+qplot(d$volatile.acidity,data=d,geom="density",color=as.factor(quality), alpha=0.2)
+qplot(d$citric.acid,data=d,geom="density",color=as.factor(quality), alpha=0.2)
+qplot(log(d$residual.sugar),data=d,geom="density",color=as.factor(quality), alpha=0.2)
+qplot(log(d$chlorides),data=d,geom="density",color=as.factor(quality), alpha=0.2)
+qplot(log(d$free.sulfur.dioxide),data=d,geom="density",color=as.factor(quality), alpha=0.2)
+qplot(log(d$total.sulfur.dioxide),data=d,geom="density",color=as.factor(quality), alpha=0.2)
+qplot(d$density,data=d,geom="density",color=as.factor(quality), alpha=0.2)
+qplot(d$pH,data=d,geom="density",color=as.factor(quality), alpha=0.2)
+qplot(d$sulphates,data=d,geom="density",color=as.factor(quality), alpha=0.2)
+qplot(d$alcohol,data=d,geom="density",color=as.factor(quality), alpha=0.2)
+
+boxplot(alcohol~quality, data=d, xlab="Wine Quality", ylab="alcohol(% volume)")
+boxplot(scale(alcohol)+scale(citric.acid)-scale(volatile.acidity)~quality, data=d, xlab="Wine Quality", ylab="z(Alcohol)+z(Citric Acid)-z(Volatile Acidity)")
+
+qplot(citric.acid,pH,data=d,geom="point",color=as.factor(quality), alpha=I(0.3), size=alcohol)
+
+
+
+# Multiple Linear Regression  
+fit <- lm(quality ~ fixed.acidity  + volatile.acidity + citric.acid  +  residual.sugar  +   chlorides +      free.sulfur.dioxide +total.sulfur.dioxide  +  density      +       pH     +     sulphates  +       alcohol  , data=d)
+summary(fit) 
+
+```
+
+# Multivariate Analysis
+
+### Talk about some of the relationships you observed in this part of the investigation. Were there features that strengthened each other in terms of looking at your feature(s) of interest?
+#### I was able to find three features that can be very goog predictors of wine quality: Alcohol, Citric Acid, and Volatile Acidity. More specifically, quality increases with increase in Alcohol and Citric Acid and decreases with increase of Volatile Acidity. 
+
+### Were there any interesting or surprising interactions between features?
+#### Surfure Diaxide had an interesting relationship with quality. From Log distributions stratified by quality, it is apparent that low Sulfure Dioxide is associated with both very low and very high quality wine, while medium quality wine tend to have medium Sulfure Diaxide concentrations. 
+
+### OPTIONAL: Did you create any models with your dataset? Discuss the strengths and limitations of your model.
+#### Yes I created a linear regression model using 'lm' function. The model identifies 'volatile.acidity', 'chlorides', 'pH', 'sulphates', and 'alcohol' as having significant relationship with quality. The adjusted R-squared was 0.3567. I tried to improve the R-squared by removing unimportant variables such as density, or free.sulfure.dioxide. However removing any of the variables resulted in a lower adjusted R-squared. 
+#### Surprisingly, citric.acid did not have a significantly high coefficient. 
+
+------
+
+# Final Plots and Summary
+
+### Plot One
+```{r echo=FALSE, warning=FALSE, Plot_One}
+d$rating='Low'
+d$rating[d$quality==5 | d$quality ==6]='Medium'
+d$rating[d$quality==7 | d$quality ==8]='High'
+qplot(alcohol,data=d,geom="density",fill=as.factor(rating), alpha=0.2)
+
+```
+
+### Description One
+#### This plot simply shows the distribution of percentage alcohol stratified by wine quality. It shows a large overlap, however, wines with higher alcohol percentage have higher chance of having higher quality. A new variable, namely 'rating', is defined to make it easier to understand. Wines with quality 3-4 are defined as 'Low', 5-6 as 'Medium' and 7-8 as 'High' rating. 
+#### Although it is a very simple plot, I think it depicts very useful information for an average wine buyer. Basically, based on this plot, white wines with alcohol percentage greater than 12 have a much higher chance of being high quality wines.
+
+### Plot Two
+```{r echo=FALSE, warning=FALSE, Plot_Two}
+qplot(sulphates,AA_score, data=d, color=as.factor(d$rating), alpha=I(0.5),size=5,xlim=c(0.4,1))
+```
+
+### Description Two
+#### This is a scatter plot of intuitively defined variable 'AA_score' vs 'sulphate' colored by the newly defined 'rating' variable. It illustrates a fairly good separation of high quality wines from the rest of the wines. Sulphate was selected based on linear regression analysis because it had a coefficient significantly larger than zero.
+
+### Plot Three
+```{r echo=FALSE, warning=FALSE, Plot_Three}
+ggplot(aes(fitted(fit),quality), data=d)+geom_point(alpha=0.1)+geom_smooth()+xlab("estimated quality")+ylab("actual quality")+geom_jitter(position = position_jitter(height = .5), alpha=0.3)
+```
+
+### Description Three
+####This plot shows the relationship between the quality estimated by the linear regression model and the actual quality. Jitter is added to the actual quality to reduce overplotting. The plot illustrates that the estimated (predicted) quality has a fairly good correlation with the actual quality.
+
+
+------
+
+# Reflection
+#### The white wine dataset contained 1599 wines with 12 measured physicochemical properties. The data was tidy and did not need any cleaning or adjustments. The questions I was interested in was the following: 
+#### 1. Which wine attributes play the most important role in the quality of white wine?
+#### 2. Is it possible to estimate (predict) the quality of white wine from its measured attributes using a model?
+#### To answer the above wuestions, I started exploring the dataset by creating histograms of every single variable to get a feeling for how the variables are distributed and identify possible outliers. Most distributions looked bell shaped with a longer right tail. The most unusual distribution belonged to citric.acid. total.sulfure.dioxide and alcohol had longer tails than others.
+#### After that I investigated the relationship between 'quality' and each variable separately. Based on correlation analysis, quality had the highest linear correlation with alcohol, volatile.acidity and citric.acid, respectively. Scatter plots and multivariate analysis showed some interesting nonlinear relationships; for example quality increased with sulphates up to 0.9 (g / dm3) and then it decreased for sulphates higher than 0.9 (g / dm3). Another example was Surfure Diaxide: low Sulfure Dioxide was associated with both very low and very high quality wine, while medium quality wine tend to have medium Sulfure Diaxide concentrations. 
+#### Finaly, I was able to determine four attributes that contribute to whilte wine quality: Alcohol, Citric Acid, Sulphate and Volatile Acidity. A linear regression model was used to model the data. The fitted model had an adjusted R-squared value of 0.36 (p < 2.2e-16). The model identified 'volatile.acidity', 'chlorides', 'pH', 'sulphates', and 'alcohol' as having significant relationship with quality. The linear regression results was consistent with my findings except for citric.acid, which did not have a significantly high coefficient. This might be due to the moderate correlation between citric acid and volatile acidity and non-linear relationships in the data. For this reason, I think a non-linear, more sophisticated model, such as Support Vector Machine (SVM) or Random Forest is more suitable to model this data. Based on results reported in [1], the top 5 attributes predicting white wine quality are: sulphates, alcohol, residual sugar, citric acid and total sulfure dioxide, which are different than my findings based on linear regression and visual exploration of data. 
+
+
+## References
+#####[1] P. Cortez, A. Cerdeira, F. Almeida, T. Matos and J. Reis. Modeling wine preferences by data mining from physicochemical properties. In Decision Support Systems, Elsevier, 47(4):547-553. ISSN: 0167-9236.
